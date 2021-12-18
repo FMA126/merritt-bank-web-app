@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { ethers } from 'ethers';
 
 export const useAccount = (provider: any) => {
     const [account, setAccount] = useState<any>(null);

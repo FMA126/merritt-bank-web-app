@@ -1,0 +1,4 @@
+export const DAI_ADDRESS = '0x6b175474e89094c44da98b954eedeac495271d0f';
+export const CDAI_ADDRESS = '0x5d3a536e4d6dbd6114cc1ead35777bab948e3643';
+export const AAVE_LENDING_POOL_ADDRESS = '0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9';
+export const AGGREGATOR_ADDRESS = '0x367761085bf3c12e5da2df99ac6e1a824612b8fb';

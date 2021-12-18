@@ -6,14 +6,16 @@ export const useDaiBalance = (contract: any, provider: any) => {
 
     useEffect(() => {
         const getBalance = async () => {
+            console.log(provider, contract)
             const accounts = await provider?.listAccounts();
-            console.log(provider, contract, accounts)
-            const daiBalance = await contract?.balanceOf(accounts[0]);
-            setBalance(daiBalance ? ethers.utils.formatEther(daiBalance.toString()) : null);
+            if (accounts & contract) {
+                const address = accounts[0];
+                const daiBalance = await contract.balanceOf(address);
+                setBalance(ethers.utils.formatEther(daiBalance.toString()));
+            }
         }
-        if (contract & provider) {
-            getBalance();
-        }
+
+        getBalance();
     }, [contract, provider]);
 
     return balance;
