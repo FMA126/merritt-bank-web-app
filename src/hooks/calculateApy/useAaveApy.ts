@@ -1,27 +1,29 @@
-import { useEffect, useState } from "react"
-import { BigNumber, Contract, ethers } from 'ethers';
-import { DAI_ADDRESS } from "../../constants";
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { BigNumber, ethers, Signer } from 'ethers';
+import { AAVE_LENDING_POOL_ADDRESS, DAI_ADDRESS } from "../../constants";
+import { FormatTypes, Interface } from "ethers/lib/utils";
+import { AaveLendingPoolAbi } from "../../abis/AaveLendingPoolAbi";
 
-export const useAaveApy = (contract: any) => {
-    const [apy, setApy] = useState<any>(0);
-
-    useEffect(() => {
-        const getAaveApy = async (AaveLendingPoolContract: Contract): Promise<BigNumber> => {
-            // Reference => https://docs.aave.com/developers/guides/apy-and-apr
-            if (AaveLendingPoolContract) {
-                const DAI = DAI_ADDRESS;
-                const ray = 10 ** 27;
-                const { currentLiquidityRate } = await AaveLendingPoolContract.getReserveData(DAI);
-                const depositAPR = currentLiquidityRate / ray;
-                const depositAPY = ethers.utils.parseUnits(((((1 + (depositAPR / (365 * 24 * 60 * 60))) ** (365 * 24 * 60 * 60)) - 1) * 100).toPrecision(3));
-                setApy(depositAPY);
-                return depositAPY;
-            }
-            return BigNumber.from(0);
+export const useAaveApy = (signer: Signer) => {
+    const [aaveApy, setAaveApy] = useState(BigNumber.from('0'))
+    const getAaveApy = async () => {
+        // Reference => https://docs.aave.com/developers/guides/apy-and-apr
+        if (signer?._isSigner) {
+            const iface = new Interface(AaveLendingPoolAbi.abi);
+            const aaveLendingPoolAbi = iface.format(FormatTypes.full);
+            const aaveLendingPoolContract = new ethers.Contract(AAVE_LENDING_POOL_ADDRESS, aaveLendingPoolAbi, signer);
+            const DAI = DAI_ADDRESS;
+            const ray = 10 ** 27;
+            const { currentLiquidityRate } = await aaveLendingPoolContract.getReserveData(DAI);
+            const depositApr = currentLiquidityRate / ray;
+            const depositApy = ethers.utils.parseUnits(((((1 + (depositApr / (365 * 24 * 60 * 60))) ** (365 * 24 * 60 * 60)) - 1) * 100).toPrecision(3));
+            console.log(ethers.utils.formatEther(depositApy))
+            setAaveApy(depositApy);
         }
+    }
+    useEffect(() => {
+        getAaveApy();
+    }, [signer]);
 
-        getAaveApy(contract);
-    }, [contract]);
-
-    return apy;
+    return aaveApy;
 }

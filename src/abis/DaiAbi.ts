@@ -1,5 +1,32 @@
 export const DaiAbi = {
+  "_format": "hh-sol-artifact-1",
+  "contractName": "DAI",
+  "sourceName": "contracts/Aggregator.sol",
   "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "allowance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
     {
       "inputs": [
         {
@@ -120,3 +147,4 @@ export const DaiAbi = {
   "linkReferences": {},
   "deployedLinkReferences": {}
 }
+

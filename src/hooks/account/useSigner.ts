@@ -1,16 +1,13 @@
-import { useEffect, useState } from "react"
-import { ethers } from 'ethers';
+import { Dispatch, SetStateAction, useEffect } from "react"
+import { Signer } from 'ethers';
+import { Web3Provider } from "@ethersproject/providers";
 
-export const useSigner = (provider: any) => {
-    const [signer, setSigner] = useState<any>(null);
-
+export const useSigner = (provider: Web3Provider | null, setSigner: Dispatch<SetStateAction<Signer | null>>) => {
     useEffect(() => {
-        const getSigner = () => {
-            return provider?.getSigner();
+        if (provider) {
+            console.log('signer effect', provider)
+            setSigner(provider.getSigner());
         }
-        const signer0 = getSigner()
-        setSigner(signer0);
-    }, [provider]);
+    }, [provider, setSigner]);
 
-    return signer;
 }

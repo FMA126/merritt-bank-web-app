@@ -1,9 +1,15 @@
 import React from 'react';
+import { Account } from '../../hooks/account/useWallet';
 
-export function NavComponent() {
+type NavProps = {
+    account: Account,
+} 
+
+export const NavComponent = (props: NavProps) => {
     return (
     <nav>
-        <button onClick={() => {console.log('connect clicked!')}}>Connect</button>
+        <div>Connected Account: {props.account.connectedAccount}</div>
+        {/* <button onClick={() => {console.log('connect clicked!')}}>Connect</button> */}
     </nav>
     )
 }
