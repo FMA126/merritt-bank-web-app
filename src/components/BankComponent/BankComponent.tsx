@@ -12,7 +12,7 @@ type BankProps = {
 }
 
 export const BankComponent = (props: BankProps) => {
-    const { signer, connectedAccount} = props.account;
+    const { signer, connectedAccount, provider} = props.account;
     const [daiContract, setDaiContract] = useState({} as Contract)
     useMemo(() => {
         setDaiContract(createDaiContract(signer));
@@ -54,14 +54,18 @@ export const BankComponent = (props: BankProps) => {
     }
 }
 
-const depositAggregator = async () => {
+const depositAggregator = async function approved() {
+    daiContract.on('Approve DAI spend limit', async () => {
+        console.log('approved')
+        const deposit = await aggregatorContract.deposit(parseEther(depositAmount.toString()), compoundApy, aaveApy);
+        const balance = await aggregatorContract.amountDeposited();
+        setAggregatorBalance(formatEther(balance));
+    })
     if(!isApproved) {
         const approvalStatus = await daiContract.approve(aggregatorContract.address, parseEther(depositAmount.toString()));
         setIsApproved(approvalStatus);
     }
-    const deposit = await aggregatorContract.deposit(parseEther(depositAmount.toString()), compoundApy, aaveApy);
-    const balance = await aggregatorContract.amountDeposited();
-      setAggregatorBalance(formatEther(balance));
+    // provider.removeListener('Approve', approved)
 }
     return (
         <div>
