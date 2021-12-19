@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { BigNumber, ethers, Signer } from 'ethers';
 import { AAVE_LENDING_POOL_ADDRESS, DAI_ADDRESS } from "../../constants";
 import { FormatTypes, Interface } from "ethers/lib/utils";
@@ -17,7 +17,6 @@ export const useAaveApy = (signer: Signer) => {
             const { currentLiquidityRate } = await aaveLendingPoolContract.getReserveData(DAI);
             const depositApr = currentLiquidityRate / ray;
             const depositApy = ethers.utils.parseUnits(((((1 + (depositApr / (365 * 24 * 60 * 60))) ** (365 * 24 * 60 * 60)) - 1) * 100).toPrecision(3));
-            console.log(ethers.utils.formatEther(depositApy))
             setAaveApy(depositApy);
         }
     }
