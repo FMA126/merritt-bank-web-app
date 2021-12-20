@@ -7,9 +7,16 @@ import { useAaveApy } from '../../hooks/calculateApy/useAaveApy';
 import { useCompoundApy } from '../../hooks/calculateApy/useCompoundApy';
 import { createAggregatorContract } from '../../contracts/createAggregatorContract';
 import { createDaiContract } from '../../contracts/createDaiContract';
+import { AAVE_LENDING_POOL_ADDRESS, CDAI_ADDRESS, ZERO_ADDRESS } from "../../constants";
 
 type BankProps = {
     account: Account,
+}
+
+const protocolAddress = {
+  [CDAI_ADDRESS]: 'Compound',
+  [AAVE_LENDING_POOL_ADDRESS]: 'Aave',
+  [ZERO_ADDRESS]: 'No Protocol in Use',
 }
 
 export const BankComponent = (props: BankProps) => {
@@ -41,14 +48,17 @@ export const BankComponent = (props: BankProps) => {
         fetchApproval();
     }, [isApproved])
     const [depositAmount, setDepositAmount] = useState(0);
-    const [aggregatorBalance, setAggregatorBalance] = useState('0')
+    const [aggregatorBalance, setAggregatorBalance] = useState('0');
+    const [fundsLocation, setFundsLocation] = useState('No Protocol in Use')
 
     useEffect(() => {
         const fetchAggregatorBalance = async () => {
             const balance = await aggregatorContract.amountDeposited();
+            const location: string = await aggregatorContract.balanceWhere();
             setAggregatorBalance(formatEther(balance));
+            setFundsLocation(protocolAddress[location])
         }
-        fetchAggregatorBalance()
+        fetchAggregatorBalance();
     }, [aggregatorBalance])
 
     const handleDepositInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -97,6 +107,7 @@ export const BankComponent = (props: BankProps) => {
           <div className="bank-body">
             <div>
               <div>Aggregator Balance: {aggregatorBalance}</div>
+              <div>Protocol in Use: {fundsLocation}</div>
             </div>
             <div>
               <input type="number" placeholder='Amount to deposit' onChange={handleDepositInputChange} value={depositAmount || 0}></input>
