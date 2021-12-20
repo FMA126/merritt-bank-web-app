@@ -1,0 +1,26 @@
+.bank-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bank-head {
+  display: flex;
+  flex-direction: column;
+  justify-content:space-evenly;
+  height: 200px;
+}
+
+.bank-body {
+  display: flex;
+  flex-direction: column;
+  justify-content:space-evenly;
+  height: 200px;
+}
+
+.deposit-button {
+  margin: 0px 10px;
+}
+.withdraw-button {
+  margin: 0px 20px;
+}

@@ -1,3 +1,4 @@
+import "./BankComponent.css";
 import { Contract } from 'ethers';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import { ChangeEvent, useEffect, useMemo, useState } from 'react';
@@ -86,17 +87,25 @@ export const BankComponent = (props: BankProps) => {
         setAggregatorBalance(formatEther(balance));
     }
     return (
-        <div>
-            <span>bank</span>
+        <div className="bank-container">
+          <div className="bank-head">
+            <h1>bank</h1>
             <div>DAI Balance: {daiBalance}</div>
             <div>Aave APY: {`${formatEther(aaveApy)} %`}</div>
             <div>Compound APY: {`${formatEther(compoundApy)} %`}</div>
-            <div>Aggregator Balance: {aggregatorBalance}</div>
+          </div>
+          <div className="bank-body">
             <div>
-                <input type="number" placeholder='Amount to deposit' onChange={handleDepositInputChange} value={depositAmount || 0}></input>
-                <button onClick={handleDeposit}>Deposit</button>
-                {!!Number.parseFloat(aggregatorBalance) && <button onClick={handleWithdraw}>Withdraw</button>}
+              <div>Aggregator Balance: {aggregatorBalance}</div>
             </div>
+            <div>
+              <input type="number" placeholder='Amount to deposit' onChange={handleDepositInputChange} value={depositAmount || 0}></input>
+            </div>
+            <div>
+              <button className="deposit-button" onClick={handleDeposit}>Deposit</button>
+              {!!Number.parseFloat(aggregatorBalance) && <button className="withdraw-button" onClick={handleWithdraw}>Withdraw</button>}
+            </div>
+          </div>
         </div>
     )
 }
